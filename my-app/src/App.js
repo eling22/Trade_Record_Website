@@ -92,34 +92,36 @@ db.collection("trade_data").get().then((querySnapshot) => {
 // ui.start('#firebaseui-auth-container', uiConfig);
 
 var provider = new firebase.auth.GoogleAuthProvider();
-var btnGooglePopup = document.getElementById('googleSingUpPopup');
 
-btnGooglePopup.onclick = function() {
-  firebase.auth().signInWithPopup(provider).then(function(result) {
-    // 可以獲得 Google 提供 token，token可透過 Google API 獲得其他數據。  
-    var token = result.credential.accessToken;
-    var user = result.user;
-    alert('您登入了');
-    console.log(token,user)
-  });  
-}
-// var user = firebase.auth().currentUser;
-// console.log(user)
-
-var btnLogOut = document.getElementById('btnLogOut');
-btnLogOut.onclick = function() {
-  firebase.auth().signOut().then(function() {
-    alert('您被逐出了');
-    var user = firebase.auth().currentUser;
-    console.log("",user)
-  })
-}
 
 const FaceCircle = (props) => (
   <circle r={props.r} fill={props.color}/>
 );
 
 function Home() {
+  // var btnGooglePopup = document.getElementById('googleSingUpPopup');
+
+  // btnGooglePopup.onclick = function() {
+  //   firebase.auth().signInWithPopup(provider).then(function(result) {
+  //     // 可以獲得 Google 提供 token，token可透過 Google API 獲得其他數據。  
+  //     var token = result.credential.accessToken;
+  //     var user = result.user;
+  //     alert('您登入了');
+  //     console.log(token,user)
+  //   });  
+  // }
+  // // var user = firebase.auth().currentUser;
+  // // console.log(user)
+
+  // var btnLogOut = document.getElementById('btnLogOut');
+  // btnLogOut.onclick = function() {
+  //   firebase.auth().signOut().then(function() {
+  //     alert('您被逐出了');
+  //     var user = firebase.auth().currentUser;
+  //     console.log("",user)
+  //   })
+  // }
+
   return(
     <div className="App">
       <header className="App-header">
@@ -147,19 +149,25 @@ function App() {
   return (
     <Router>
         <div>
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/about">About</Link>
-              </li>
-              <li>
-                <Link to="/users">Users</Link>
-              </li>
-            </ul>
-          </nav>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#">Eling's Web</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+                <a class="nav-link" href="/about">About</a>
+                <a class="nav-link" href="/users">Users</a>
+              </div>
+            </div>
+            <form class="d-flex">
+              <button class="btn btn-outline-light" type="submit" id = "googleSingUpPopup" style={{marginRight: 15}}>登入</button>
+              <button class="btn btn-outline-light" type="submit" id = "btnLogOut">登出</button>
+            </form>
+          </div>
+        </nav>
   
           {/* A <Switch> looks through its children <Route>s and
               renders the first one that matches the current URL. */}
