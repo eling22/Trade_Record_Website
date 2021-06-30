@@ -7,6 +7,7 @@ import {
   Route,
 } from "react-router-dom";
 import NavBar from "./navbar"
+import ShowRecord from './show_record/show_record';
 
 // const d3 = require("d3");
 
@@ -32,10 +33,6 @@ function Home() {
 
 function About() {
   return <h2>About</h2>;
-}
-
-function ShowRecord() {
-  return <h2>Show Record</h2>;
 }
 
 function App() {
