@@ -1,5 +1,3 @@
-// import { svg } from 'd3';
-// import {circle} from 'd3';
 import './App.css';
 import {
   BrowserRouter as Router,
@@ -8,8 +6,6 @@ import {
 } from "react-router-dom";
 import NavBar from "./navbar"
 import ShowRecord from './show_record/show_record';
-
-// const d3 = require("d3");
 
 const FaceCircle = (props) => (
   <circle r={props.r} fill={props.color}/>

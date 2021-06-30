@@ -38,12 +38,11 @@ export default class Database {
         var user = result.user;
         alert('您登入了');
         console.log(token,user)
-        this.getData()
         this.is_log_in = !this.is_log_in
     }
     getData(){
         console.log("get data")
-        db.collection("trade_data").get().then((querySnapshot) => {
+        db.collection("eileen_trade_data").get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 console.log(`${doc.id} => ${doc.data()}`);
                 console.log(doc.data());
