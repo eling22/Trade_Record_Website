@@ -19,13 +19,28 @@ firebase.initializeApp(firebaseConfig);
 
 var provider = new firebase.auth.GoogleAuthProvider();
 
-class BtnLogIn extends React.Component {
+class BtnLog extends React.Component {
     constructor(props) {
         super(props);
         // This binding is necessary to make `this` work in the callback
         this.handleClick = this.handleClick.bind(this);
+        this.is_log_in = false
     }
     handleClick() {
+        if (this.is_log_in) this.logOut()
+        else this.logIn()
+        this.setState({ state: this.state });
+    }
+    logOut(){
+        console.log("click logout")
+        firebase.auth().signOut().then(function() {
+            alert('您被逐出了');
+            var user = firebase.auth().currentUser;
+            console.log("",user)
+        }); 
+        this.is_log_in = !this.is_log_in
+    }
+    logIn(){
         console.log("click login")
         firebase.auth().signInWithPopup(provider).then(function(result) {
             // 可以獲得 Google 提供 token，token可透過 Google API 獲得其他數據。  
@@ -34,31 +49,16 @@ class BtnLogIn extends React.Component {
             alert('您登入了');
             console.log(token,user)
         });  
+        this.is_log_in = !this.is_log_in
     }
     render() {
-        return (
-            <button className="btn btn-outline-light" type="button" id ="googleSingUpPopup" style={{marginRight: 15}} onClick={this.handleClick}>google 登入</button>
-        );
-    }
-}
+        let str = ""
+        if(this.is_log_in) str = "登出";
+        else str = "google 登入";
 
-class BtnLogOut extends React.Component {
-    constructor(props) {
-        super(props);
-        // This binding is necessary to make `this` work in the callback
-        this.handleClick = this.handleClick.bind(this);
-    }
-    handleClick() {
-        console.log("click logout")
-        firebase.auth().signOut().then(function() {
-            alert('您被逐出了');
-            var user = firebase.auth().currentUser;
-            console.log("",user)
-        });  
-    }
-    render() {
+
         return (
-            <button className="btn btn-outline-light" type="button" id = "btnLogOut" onClick={this.handleClick}>登出</button>
+            <button className="btn btn-outline-light" type="button" id = "btnLogOut" onClick={this.handleClick}>{str}</button>
         );
     }
 }
@@ -79,8 +79,7 @@ export default function NavBar(){
               </div>
             </div>
             <form className="d-flex">
-              <BtnLogIn></BtnLogIn>
-              <BtnLogOut></BtnLogOut>
+              <BtnLog></BtnLog>
             </form>
           </div>
         </nav>
