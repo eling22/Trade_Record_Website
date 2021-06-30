@@ -16,7 +16,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
+var db = firebase.firestore();
 var provider = new firebase.auth.GoogleAuthProvider();
 
 class BtnLog extends React.Component {
@@ -48,6 +48,12 @@ class BtnLog extends React.Component {
             var user = result.user;
             alert('您登入了');
             console.log(token,user)
+            db.collection("trade_data").get().then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                  console.log(`${doc.id} => ${doc.data()}`);
+                  console.log(doc.data());
+              });
+            });
         });  
         this.is_log_in = !this.is_log_in
     }
@@ -55,7 +61,6 @@ class BtnLog extends React.Component {
         let str = ""
         if(this.is_log_in) str = "登出";
         else str = "google 登入";
-
 
         return (
             <button className="btn btn-outline-light" type="button" id = "btnLogOut" onClick={this.handleClick}>{str}</button>
