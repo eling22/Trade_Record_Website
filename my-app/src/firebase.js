@@ -22,25 +22,23 @@ export default class Database {
     constructor(props) {
         this.is_log_in = false
     }
-    logOut(){
+    async logOut(){
         console.log("click logout")
-        firebase.auth().signOut().then(function() {
-            alert('您被逐出了');
-            var user = firebase.auth().currentUser;
-            console.log("",user)
-        }); 
+        await firebase.auth().signOut();
+        alert('您被逐出了');
+        var user = firebase.auth().currentUser;
+        console.log("",user)
         this.is_log_in = !this.is_log_in
     }
-    logIn(){
+    async logIn(){
         console.log("click login")
-        firebase.auth().signInWithPopup(provider).then((result)=>{
-            // 可以獲得 Google 提供 token，token可透過 Google API 獲得其他數據。  
-            var token = result.credential.accessToken;
-            var user = result.user;
-            alert('您登入了');
-            console.log(token,user)
-            this.getData()
-        });  
+        let result = await firebase.auth().signInWithPopup(provider);
+        // 可以獲得 Google 提供 token，token可透過 Google API 獲得其他數據。  
+        var token = result.credential.accessToken;
+        var user = result.user;
+        alert('您登入了');
+        console.log(token,user)
+        this.getData()
         this.is_log_in = !this.is_log_in
     }
     getData(){
