@@ -80,7 +80,7 @@ export default function NavBar(){
               <div className="navbar-nav">
                 <a className="nav-link active" aria-current="page" href="/">Home</a>
                 <a className="nav-link" href="/about">About</a>
-                <a className="nav-link" href="/users">Users</a>
+                <a className="nav-link" href="/show_record">Show Record</a>
               </div>
             </div>
             <form className="d-flex">
