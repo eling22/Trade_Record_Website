@@ -21,6 +21,7 @@ var provider = new firebase.auth.GoogleAuthProvider();
 export default class Database {
     constructor(props) {
         this.is_log_in = false
+        this.data = []
     }
     async logOut(){
         console.log("click logout")
@@ -40,13 +41,16 @@ export default class Database {
         console.log(token,user)
         this.is_log_in = !this.is_log_in
     }
-    getData(){
+    async fetchData(){
         console.log("get data")
-        db.collection("eileen_trade_data").get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                console.log(`${doc.id} => ${doc.data()}`);
-                console.log(doc.data());
-            });
-          });
+        let querySnapshot = await db.collection("eileen_trade_data").get();
+        querySnapshot.forEach((doc) => {
+            // console.log(`${doc.id} => ${doc.data()}`);
+            // console.log(doc.data());
+            this.data.push(doc.data())
+        });
+    }
+    getData(){
+        return this.data
     }
 }
