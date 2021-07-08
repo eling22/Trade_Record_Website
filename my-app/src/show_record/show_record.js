@@ -117,6 +117,20 @@ export default class ShowRecord extends React.Component {
   render() {
     let data = this.db.getArrangeData();
     console.log(data);
-    return <LineChart data={data}></LineChart>;
+    console.log(data.length === 0 ? "yes" : "no");
+    let line_chart = <LineChart data={data}></LineChart>;
+    let loading = (
+      <p
+        style={{
+          "font-size": "40px",
+          display: "flex",
+          "justify-content": "center",
+        }}
+      >
+        Data is loading
+      </p>
+    );
+    // return loading;
+    return data.length === 0 ? loading : line_chart;
   }
 }
