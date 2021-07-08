@@ -4,41 +4,50 @@ import Database from "../firebase";
 
 function drawChart(svg, data) {
   const height = 500;
-  const width = 500;
-  const margin = { top: 20, right: 30, bottom: 30, left: 40 };
+  const width = 800;
+  const margin = { top: 20, right: 30, bottom: 30, left: 60 };
+  const innerHeight = height - margin.bottom - margin.top;
+  const innerWidth = width - margin.right - margin.left;
+
+  console.log(d3.extent(data, (d) => d.money));
+  console.log(data.map((d) => d.date));
 
   const x = d3
     .scaleBand()
     .domain(data.map((d) => d.date))
-    .range([margin.left, width - margin.right]);
+    .range([innerWidth, 0]);
 
   const y = d3
     .scaleLinear()
     .domain([d3.min(data, (d) => d.money), d3.max(data, (d) => d.money)])
-    .rangeRound([height - margin.bottom, margin.top]);
+    .rangeRound([0, innerHeight]);
 
   const xAxis = (g) =>
-    g.attr("transform", `translate(0,${height - margin.bottom})`).call(
-      d3
-        .axisBottom(x)
-        .tickValues(
-          d3
-            .ticks(...d3.extent(x.domain()), width / 40)
-            .filter((v) => x(v) !== undefined)
-        )
-        .tickSizeOuter(0)
-    );
+    g
+      .attr(
+        "transform",
+        `translate(${margin.left},${height - margin.bottom + 10})`
+      )
+      .call(
+        d3
+          .axisBottom(x)
+          .tickValues(
+            d3
+              .ticks(...d3.extent(x.domain()), width / 40)
+              .filter((v) => x(v) !== undefined)
+          )
+          .tickSizeOuter(0)
+      );
 
   const y1Axis = (g) =>
     g
-      .attr("transform", `translate(${margin.left},0)`)
+      .attr("transform", `translate(${margin.left - 10},${margin.top})`)
       .style("color", "steelblue")
       .call(d3.axisLeft(y).ticks(null, "s"))
-      .call((g) => g.select(".domain").remove())
       .call((g) =>
         g
           .append("text")
-          .attr("x", -margin.left)
+          .attr("x", 0)
           .attr("y", 10)
           .attr("fill", "currentColor")
           .attr("text-anchor", "start")
@@ -55,6 +64,7 @@ function drawChart(svg, data) {
     .y((d) => y(d.money));
 
   svg
+    .select(".plot-area")
     .append("path")
     .datum(data)
     .attr("fill", "none")
@@ -63,6 +73,20 @@ function drawChart(svg, data) {
     .attr("stroke-linejoin", "round")
     .attr("stroke-linecap", "round")
     .attr("d", line);
+
+  svg
+    .select(".plot-area")
+    .selectAll("circle")
+    .data(data)
+    .join("circle")
+    .attr("cx", (d) => x(d.date))
+    .attr("cy", (d) => y(d.money))
+    .attr("r", 1)
+    .style("fill", "navy");
+
+  svg
+    .select(".plot-area")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
   console.log("hello");
 }
@@ -117,7 +141,6 @@ export default class ShowRecord extends React.Component {
   render() {
     let data = this.db.getArrangeData();
     console.log(data);
-    console.log(data.length === 0 ? "yes" : "no");
     let line_chart = <LineChart data={data}></LineChart>;
     let loading = (
       <p
@@ -130,7 +153,6 @@ export default class ShowRecord extends React.Component {
         Data is loading
       </p>
     );
-    // return loading;
     return data.length === 0 ? loading : line_chart;
   }
 }
