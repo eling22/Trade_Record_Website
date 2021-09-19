@@ -42,7 +42,6 @@ export default class Database {
     this.is_log_in = !this.is_log_in;
   }
   async fetchData() {
-    console.log("get data");
     let querySnapshot = await db
       .collection("eileen_trade_data")
       .orderBy("date")
@@ -52,7 +51,6 @@ export default class Database {
       // console.log(doc.data());
       this.data.push(doc.data());
     });
-    console.log("get data");
   }
   getData() {
     return this.data;

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import React from "react";
 import NavBar from "./navbar";
 import ShowRecord from "./show_record/show_record";
+import TradeRecord from "./trade_record/trade_record";
 
 const FaceCircle = (props) => <circle r={props.r} fill={props.color} />;
 
@@ -37,6 +38,9 @@ function App() {
           </Route>
           <Route path="/show_record">
             <ShowRecord />
+          </Route>
+          <Route path="/trade_record">
+            <TradeRecord />
           </Route>
           <Route path="/">
             <Home />
