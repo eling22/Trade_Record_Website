@@ -18,7 +18,7 @@ function Loading() {
     display: "flex",
     "justify-content": "center",
   };
-  return <p style={load_style} Data is loading></p>;
+  return <p style={load_style}>Data is loading</p>;
 }
 
 export default class TradeRecord extends React.Component {
