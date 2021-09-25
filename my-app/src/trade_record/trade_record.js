@@ -13,12 +13,13 @@ function DataTable({ columns, data }) {
 }
 
 function Loading(props) {
-  const load_style = {
-    "fontSize": "40px",
-    display: "flex",
-    "justifyContent": "center",
-  };
-  return <p style={load_style}>{props.children}</p>;
+  // const load_style = {
+  //   "fontSize": "40px",
+  //   display: "flex",
+  //   "justifyContent": "center",
+  // };
+  // return <p style={load_style}>{props.children}</p>;
+  return <p className="text-yellow-600">{props.children}</p>;
 }
 
 export default class TradeRecord extends React.Component {
