@@ -6,24 +6,19 @@ var db = new Database();
 class BtnLog extends React.Component {
   constructor(props) {
     super(props);
-    // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
-    this.str = "google 登入";
+    this.state = {
+      string: "google 登入",
+      is_log_in: false
+    };
   }
   handleClick() {
-    if (db.is_log_in) this.logOut();
-    else this.logIn();
-    this.setState({ state: this.state });
-  }
-  logOut() {
-    db.logOut();
-    this.str = "google 登入";
-  }
-  logIn() {
-    db.logIn();
-    this.str = "登出";
+    if (db.is_log_in) db.logOut();
+    else db.logIn();
+    this.setState({ is_log_in: !this.state.is_log_in });
   }
   render() {
+    const string = this.state.is_log_in ? "登出" : "google 登入";
     return (
       <button
         className="btn btn-outline-light"
@@ -31,7 +26,7 @@ class BtnLog extends React.Component {
         id="btnLogOut"
         onClick={this.handleClick}
       >
-        {this.str}
+        {string}
       </button>
     );
   }
@@ -71,9 +66,7 @@ export default function NavBar() {
             </a>
           </div>
         </div>
-        <form className="d-flex">
-          <BtnLog></BtnLog>
-        </form>
+        <BtnLog></BtnLog>
       </div>
     </nav>
   );
