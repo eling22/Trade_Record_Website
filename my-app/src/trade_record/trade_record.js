@@ -66,9 +66,7 @@ export default class TradeRecord extends React.Component {
     this.setState({ data: data });
   }
   componentDidMount() {
-    this.db.fetchData();
-    const data = this.db.getData()
-    this.setState({ data: data });
+    this.fetch_data();
   }
   render() {
     if (this.state.data.length === 0) {
