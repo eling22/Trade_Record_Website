@@ -12,64 +12,69 @@ function DataTable({ columns, data }) {
   );
 }
 
-function Loading() {
+function Loading(props) {
   const load_style = {
-    "font-size": "40px",
+    "fontSize": "40px",
     display: "flex",
-    "justify-content": "center",
+    "justifyContent": "center",
   };
-  return <p style={load_style}>Data is loading</p>;
+  return <p style={load_style}>{props.children}</p>;
 }
 
 export default class TradeRecord extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      cols: [
+        {
+          Header: "成交日",
+          accessor: "date",
+        },
+        {
+          Header: "股名",
+          accessor: "ch_name",
+        },
+        {
+          Header: "交易類別",
+          accessor: "trade_type",
+        },
+        {
+          Header: "成交價",
+          accessor: "price",
+        },
+        {
+          Header: "股數",
+          accessor: "num",
+        },
+        {
+          Header: "手續費",
+          accessor: "fee",
+        },
+        {
+          Header: "交易稅",
+          accessor: "tax",
+        },
+      ],
+      data: Array(0),
+      loading: true
+    }
     this.db = new Database();
-    this.fetch_data();
   }
   async fetch_data() {
     await this.db.fetchData();
-    this.setState({ state: this.state });
+    const data = this.db.getData()
+    this.setState({ data: data });
   }
-  get_col() {
-    return [
-      {
-        Header: "成交日",
-        accessor: "date",
-      },
-      {
-        Header: "股名",
-        accessor: "ch_name",
-      },
-      {
-        Header: "交易類別",
-        accessor: "trade_type",
-      },
-      {
-        Header: "成交價",
-        accessor: "price",
-      },
-      {
-        Header: "股數",
-        accessor: "num",
-      },
-      {
-        Header: "手續費",
-        accessor: "fee",
-      },
-      {
-        Header: "交易稅",
-        accessor: "tax",
-      },
-    ];
+  componentDidMount() {
+    this.db.fetchData();
+    const data = this.db.getData()
+    this.setState({ data: data });
   }
   render() {
-    let cols = this.get_col();
-    let data = this.db.getData();
-    if (data.length === 0) {
-      return <Loading></Loading>;
+    if (this.state.data.length === 0) {
+      return <Loading>Data is loading</Loading>;
     } else {
-      return <DataTable columns={cols} data={data}></DataTable>;
+      return <DataTable columns={this.state.cols} data={this.state.data}></DataTable>;
     }
   }
 }
