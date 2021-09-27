@@ -1,159 +1,31 @@
 import React from "react";
-import * as d3 from "d3";
 import Database from "../firebase";
 import { LoadingPage } from "../helper/loading_page";
 import { VegaLite } from 'react-vega'
 
-// function drawChart(svg, data) {
-//   const height = 500;
-//   const width = 800;
-//   const margin = { top: 20, right: 30, bottom: 30, left: 60 };
-//   const innerHeight = height - margin.bottom - margin.top;
-//   const innerWidth = width - margin.right - margin.left;
-
-//   console.log(d3.extent(data, (d) => d.money));
-//   console.log(data.map((d) => d.date));
-
-//   const x = d3
-//     .scaleBand()
-//     .domain(data.map((d) => d.date))
-//     .range([innerWidth, 0]);
-
-//   const y = d3
-//     .scaleLinear()
-//     .domain([d3.min(data, (d) => d.money), d3.max(data, (d) => d.money)])
-//     .rangeRound([0, innerHeight]);
-
-//   const xAxis = (g) =>
-//     g
-//       .attr(
-//         "transform",
-//         `translate(${margin.left},${height - margin.bottom + 10})`
-//       )
-//       .call(
-//         d3
-//           .axisBottom(x)
-//           .tickValues(
-//             d3
-//               .ticks(...d3.extent(x.domain()), width / 40)
-//               .filter((v) => x(v) !== undefined)
-//           )
-//           .tickSizeOuter(0)
-//       );
-
-//   const y1Axis = (g) =>
-//     g
-//       .attr("transform", `translate(${margin.left - 10},${margin.top})`)
-//       .style("color", "steelblue")
-//       .call(d3.axisLeft(y).ticks(null, "s"))
-//       .call((g) =>
-//         g
-//           .append("text")
-//           .attr("x", 0)
-//           .attr("y", 10)
-//           .attr("fill", "currentColor")
-//           .attr("text-anchor", "start")
-//           .text(data.y)
-//       );
-
-//   svg.select(".x-axis").call(xAxis);
-//   svg.select(".y-axis").call(y1Axis);
-
-//   var line = d3
-//     .line()
-//     .defined((d) => !isNaN(d.money))
-//     .x((d) => x(d.date))
-//     .y((d) => y(d.money));
-
-//   svg
-//     .select(".plot-area")
-//     .append("path")
-//     .datum(data)
-//     .attr("fill", "none")
-//     .attr("stroke", "steelblue")
-//     .attr("stroke-width", 1.5)
-//     .attr("stroke-linejoin", "round")
-//     .attr("stroke-linecap", "round")
-//     .attr("d", line);
-
-//   svg
-//     .select(".plot-area")
-//     .selectAll("circle")
-//     .data(data)
-//     .join("circle")
-//     .attr("cx", (d) => x(d.date))
-//     .attr("cy", (d) => y(d.money))
-//     .attr("r", 1)
-//     .style("fill", "navy");
-
-//   svg
-//     .select(".plot-area")
-//     .attr("transform", `translate(${margin.left},${margin.top})`);
-
-//   console.log("hello");
-// }
-
-// class LineChart extends React.Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.myReference = React.createRef();
-//   }
-//   componentDidMount() {
-//     this.update();
-//   }
-//   componentDidUpdate() {
-//     this.update();
-//   }
-
-//   update() {
-//     let svg = d3.select(this.myReference.current);
-//     drawChart(svg, this.props.data);
-//   }
-
-//   render() {
-//     return (
-//       <svg
-//         ref={this.myReference}
-//         style={{
-//           height: 500,
-//           width: "100%",
-//           marginRight: "0px",
-//           marginLeft: "0px",
-//         }}
-//       >
-//         <g className="plot-area" />
-//         <g className="x-axis" />
-//         <g className="y-axis" />
-//       </svg>
-//     );
-//   }
-// }
-import { compile } from 'vega-lite';
-import { vegaEmbed } from 'vega-embed';
 const spec = {
   width: 800,
   height: 500,
   mark: 'line',
   encoding: {
-    x: { field: 'a', type: 'ordinal' },
-    y: { field: 'b', type: 'quantitative' },
+    x: {
+      "field": "Date",
+      "type": "temporal",
+      "axis": {
+        "format": "%Y %b",
+        "ticks": 50
+      }
+    },
+    y: { field: 'money', type: 'quantitative' },
   },
   data: { name: 'table' }, // note: vega-lite data attribute is a plain object instead of an array
-}
-
-const barData = {
-  table: [
-    { a: 'A', b: 28 },
-    { a: 'B', b: 55 },
-    { a: 'C', b: 43 },
-    { a: 'D', b: 91 },
-    { a: 'E', b: 81 },
-    { a: 'F', b: 53 },
-    { a: 'G', b: 19 },
-    { a: 'H', b: 87 },
-    { a: 'I', b: 52 },
-  ],
+  transform: [
+    { "calculate": "datum.date", "as": "strYMD" },
+    { "calculate": "parseInt(substring(datum.strYMD, 0, 4))", "as": "intYear" },
+    { "calculate": "parseInt(substring(datum.strYMD, 4, 6) - 1)", "as": "intMonth" },
+    { "calculate": "parseInt(substring(datum.strYMD, 6))", "as": "intDay" },
+    { "calculate": "datetime(datum.intYear, datum.intMonth, datum.intDay)", "as": "Date" },
+  ]
 }
 
 export default class ShowRecord extends React.Component {
@@ -167,9 +39,8 @@ export default class ShowRecord extends React.Component {
     this.setState({ state: this.state });
   }
   render() {
-    let data = this.db.getArrangeData();
-    // console.log(data);
-    // let line_chart = <LineChart data={data}></LineChart>;
-    return data.length === 0 ? <LoadingPage /> : <VegaLite spec={spec} data={barData} />;
+    const data = this.db.getArrangeData();
+    const line_data = { table: data };
+    return data.length === 0 ? <LoadingPage /> : <VegaLite spec={spec} data={line_data} />;
   }
 }
