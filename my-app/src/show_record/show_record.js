@@ -2,6 +2,7 @@ import React from "react";
 import * as d3 from "d3";
 import Database from "../firebase";
 import { LoadingPage } from "../helper/loading_page";
+import { VegaLite } from 'react-vega'
 
 // function drawChart(svg, data) {
 //   const height = 500;
@@ -128,6 +129,32 @@ import { LoadingPage } from "../helper/loading_page";
 //     );
 //   }
 // }
+import { compile } from 'vega-lite';
+import { vegaEmbed } from 'vega-embed';
+const spec = {
+  width: 800,
+  height: 500,
+  mark: 'line',
+  encoding: {
+    x: { field: 'a', type: 'ordinal' },
+    y: { field: 'b', type: 'quantitative' },
+  },
+  data: { name: 'table' }, // note: vega-lite data attribute is a plain object instead of an array
+}
+
+const barData = {
+  table: [
+    { a: 'A', b: 28 },
+    { a: 'B', b: 55 },
+    { a: 'C', b: 43 },
+    { a: 'D', b: 91 },
+    { a: 'E', b: 81 },
+    { a: 'F', b: 53 },
+    { a: 'G', b: 19 },
+    { a: 'H', b: 87 },
+    { a: 'I', b: 52 },
+  ],
+}
 
 export default class ShowRecord extends React.Component {
   constructor(props) {
@@ -143,6 +170,6 @@ export default class ShowRecord extends React.Component {
     let data = this.db.getArrangeData();
     // console.log(data);
     // let line_chart = <LineChart data={data}></LineChart>;
-    return data.length === 0 ? <LoadingPage /> : <p>hello</p>;
+    return data.length === 0 ? <LoadingPage /> : <VegaLite spec={spec} data={barData} />;
   }
 }
