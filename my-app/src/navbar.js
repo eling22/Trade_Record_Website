@@ -1,5 +1,6 @@
 import React from "react";
 import Database from "./firebase";
+import { NavLink } from 'react-router-dom';
 
 var db = new Database();
 
@@ -52,21 +53,13 @@ export default function NavBar() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav">
-            <a className="nav-link active" aria-current="page" href="/">
-              Home
-            </a>
-            <a className="nav-link" href="/about">
-              About
-            </a>
-            <a className="nav-link" href="/trade_record">
-              Trade Record
-            </a>
-            <a className="nav-link" href="/show_record">
-              Show Record
-            </a>
+            <NavLink exact className="nav-link" to="/" activeClassName="active">Home</NavLink>
+            <NavLink exact className="nav-link" to="/about" activeClassName="active">About</NavLink>
+            <NavLink exact className="nav-link" to="/trade_record" activeClassName="active">Trade Record</NavLink>
+            <NavLink exact className="nav-link" to="/show_record" activeClassName="active">Show Record</NavLink>
           </div>
         </div>
-        <BtnLog></BtnLog>
+        <BtnLog />
       </div>
     </nav>
   );
